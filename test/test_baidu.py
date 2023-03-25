@@ -2,7 +2,7 @@
 Author: ryuhangseong liuhangcheng2002@gmail.com
 Date: 2023-03-24 17:58:33
 LastEditors: ryuhangseong liuhangcheng2002@gmail.com
-LastEditTime: 2023-03-24 21:53:22
+LastEditTime: 2023-03-25 11:30:33
 FilePath: \ddlqalearn\test\test_baidu.py
 Description: 
 
@@ -57,7 +57,9 @@ class TestBaidu(unittest.TestCase):
         sleep(2)
         WebDriverWait(self.driver, 0.5).until(EC.title_contains(u'妖梦'))
         print(u'网页标题含有：“妖梦”')
+
         sleep(2)
         
 if __name__ == '__main__':
     unittest.main()
+    
