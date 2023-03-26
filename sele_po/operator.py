@@ -4,6 +4,7 @@ import sys
 import socket
 import time
 import re
+import shutil
 from selenium import webdriver
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.by import By
@@ -31,13 +32,16 @@ class Operator:
             socket.setdefaulttimeout(50)
             if driver == 'chrome':
                 self.driver = webdriver.Chrome(service=chromedriver)
-            self.driver.implicitly_wait(10)
             print(u'浏览器启动成功')
         except Exception as e:
             print(f'浏览器启动失败：{e}')
             raise Exception(e)
         return self.driver
     
+    def implicitly_wait(self, num: int):
+        self.driver.implicitly_wait(num)
+        return print(f'隐式等待时间设置为：{num}秒')
+        
     def get(self, url):
         self.driver.get(url)
         return print(f'启动网站\"{url}\"成功')
@@ -92,4 +96,30 @@ class Operator:
     
     def get_screen(self, filename: str):
         self.driver.save_screenshot(filename)
-        return print(f'名为{filename}的截图已保存至/screenshots目录下')
+        shutil.move(f'{filename}', f'{os.getcwd()}/screenshot/{filename}')
+        return print(f'名为{filename}的截图已保存至screenshot目录下')
+    
+    def wait_page_load(self, timeout: int, time: int):
+        try:
+            WebDriverWait(self.driver, timeout, time).until(lambda d: d.execute_script("return document.readyState"))
+        except Exception as e:
+            raise Exception(e)
+        
+    def wait_element_visible(self, timeout: int, time: int, locator):
+        ele = WebDriverWait(self.driver, timeout, time).until(EC.visibility_of_element_located(locator))
+        return ele
+    
+    def close(self):
+        try:
+            self.driver.close()
+            return print('网页已关闭')
+        except Exception as e:
+            raise Exception(e)
+        
+    def find_element(self, by, locate):
+        web_ele = self.driver.find_element(by, locate)
+        return web_ele
+    
+    def send_keys(self, by, locate, string: str):
+        self.find_element(by, locate).send_keys(string)
+        return print(f'已输入：{string}')

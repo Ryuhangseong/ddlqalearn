@@ -4,3 +4,4 @@
 /.idea
 /module/__pycache__
 /test/report/*.html
+/screenshot/*.png
