@@ -24,7 +24,7 @@ class Operator:
     def start(self):
         chromedriver.command_line_args()
         chromedriver.start()
-        return print(f'Chromedriver服务已启动')
+        return print(u'Chromedriver服务已启动')
         
     def open(self, driver: webdriver):
         driver = driver.lower()
@@ -96,6 +96,9 @@ class Operator:
     
     def get_screen(self, filename: str):
         self.driver.save_screenshot(filename)
+        if os.path.exists(f'{os.getcwd()}/screenshot/{filename}'):
+            os.remove(f'{os.getcwd()}/screenshot/{filename}')
+            print(f'已删除同名的{filename}文件')
         shutil.move(f'{filename}', f'{os.getcwd()}/screenshot/{filename}')
         return print(f'名为{filename}的截图已保存至screenshot目录下')
     
@@ -112,7 +115,7 @@ class Operator:
     def close(self):
         try:
             self.driver.close()
-            return print('网页已关闭')
+            return print(u'网页已关闭')
         except Exception as e:
             raise Exception(e)
         
@@ -123,3 +126,37 @@ class Operator:
     def send_keys(self, by, locate, string: str):
         self.find_element(by, locate).send_keys(string)
         return print(f'已输入：{string}')
+    
+    def click(self, by, locate):
+        self.find_element(by, locate).click()
+    
+    def get_current_handle(self):
+        print(u'已获取当前标签页的句柄')
+        return self.driver.current_window_handle
+        
+    def get_all_handles(self):
+        print(u'已获取全部标签页的句柄')
+        return self.driver.window_handles
+        
+    def switch_to_window(self, handle):
+        self.driver.switch_to.window(handle)
+        return print(u'已切换到所要求的页面')
+    
+    def switch_to_iframe(self, iframe: str):
+        self.driver.switch_to.frame(iframe)
+        return print(u'已切换到所要求的表单')
+    
+    def switch_to_default_content(self):
+        self.driver.switch_to.default_content()
+        return print(u'已回到最外层页面')
+    
+    def print_text(self, by, locate):
+        return print(f'{self.find_element(by, locate).text}')
+    
+    def execute_script(self, js: str):
+        try:
+            self.driver.execute_script(js)
+        except Exception as e:
+            raise Exception(e)
+        
+    
